@@ -1272,6 +1272,8 @@ namespace Delight
             var spacing = isHorizontal ? (HorizontalSpacing != null ? HorizontalSpacing.Pixels : spacingSize.Pixels)
                  : (VerticalSpacing != null ? VerticalSpacing.Pixels : spacingSize.Pixels);
 
+            var padding = Padding ?? ElementMargin.Default;
+
             var virtualItems = IsVirtualized ? _virtualItems.Skip(PageIndex * itemsPerPage).Take(itemsPerPage).ToList() : null;
             int childCount = !IsVirtualized ? children.Count : virtualItems.Count;
             int childIndex = 0;
@@ -1319,8 +1321,8 @@ namespace Delight
 
                 // set offsets and alignment
                 var offset = new ElementMargin(
-                    new ElementSize(isHorizontal ? totalWidth + spacing * childIndex : 0f, ElementSizeUnit.Pixels),
-                    new ElementSize(!isHorizontal ? totalHeight + spacing * childIndex : 0f, ElementSizeUnit.Pixels));
+                    new ElementSize(isHorizontal ? padding.Left.Pixels + totalWidth + spacing * childIndex : 0f, ElementSizeUnit.Pixels),
+                    new ElementSize(!isHorizontal ? padding.Top.Pixels + totalHeight + spacing * childIndex : 0f, ElementSizeUnit.Pixels));
 
                 // set desired alignment if it is valid for the orientation otherwise use defaults
                 var alignment = ElementAlignment.Center;
@@ -1385,7 +1387,6 @@ namespace Delight
 
             // calculate total width and height
             float totalSpacing = childCount > 1 ? (childIndex - 1) * spacing : 0f;
-            var padding = Padding ?? ElementMargin.Default;
             var margin = Margin ?? ElementMargin.Default;
 
             // .. add margins
